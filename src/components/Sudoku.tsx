@@ -44,7 +44,7 @@ const Sudoku = () => {
           </p>
 
           {/* Game Board */}
-          <ScalingElement defaultScale={0} margin={0} showDebugInfo>
+          <ScalingElement defaultScale={0} margin={0}>
             <SudokuGrid ref={boardRef} showSolution={false} />
           </ScalingElement>
 

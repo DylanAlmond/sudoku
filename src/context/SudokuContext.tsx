@@ -197,7 +197,7 @@ export function SudokuProvider({ children }: SudokuProviderProps) {
    */
   const newGame = useCallback(() => {
     const { puzzle, solution } = generatePuzzledifficulty('easy');
-    console.log(solution);
+    console.log('Solution:', solution);
 
     containerRef.current?.scrollTo(0, 0);
     dispatch({ type: 'NEW_GAME', payload: { board: puzzle, solution } });
@@ -278,7 +278,7 @@ export function SudokuProvider({ children }: SudokuProviderProps) {
       dispatch({ type: 'SET_DRAG_VALUE', value: null });
       dispatch({ type: 'RESET_SELECTION' });
     },
-    [state.board, state.conflicts]
+    [state.board, state.conflicts, state.score]
   );
 
   /**
@@ -308,8 +308,6 @@ export function SudokuProvider({ children }: SudokuProviderProps) {
       // Remove the source cell and deduct any points given
       const sourceValue = state.board[sourceRow][sourceCol];
       newBoard[sourceRow][sourceCol] = null;
-
-      console.log(sourceValue);
 
       // Remove source conflcits
       if (sourceValue !== null) {
