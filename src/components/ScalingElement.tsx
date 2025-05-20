@@ -8,16 +8,6 @@ import './ScalingElement.css';
 
 interface ScalingElementProps {
   /**
-   * Original width of the element (before scaling)
-   */
-  originalWidth: number;
-
-  /**
-   * Original height of the element (before scaling)
-   */
-  originalHeight: number;
-
-  /**
    * The default scale
    */
   defaultScale?: number;
@@ -54,8 +44,6 @@ interface ScalingElementProps {
  * @returns
  */
 const ScalingElement = ({
-  originalWidth,
-  originalHeight,
   defaultScale = 0,
   minScale = 0.1,
   margin = 0,
@@ -64,57 +52,63 @@ const ScalingElement = ({
   children
 }: ScalingElementProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const elementRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState<number>(defaultScale);
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-
+  const [containerSize, setContainerSize] = useState<{ width: number; height: number }>({
+    width: 0,
+    height: 0
+  });
+  const [contentSize, setContentSize] = useState<{ width: number; height: number }>({
+    width: 0,
+    height: 0
+  });
+  
   /**
-   * Update scale when container size changes
+   * Update scale when container or content size changes
    */
   const updateScale = useCallback(() => {
-    if (!containerRef.current || !elementRef.current) return;
+    if (!containerRef.current || !contentRef.current) return;
 
     // Get container dimensions
     const containerWidth = containerRef.current.clientWidth;
     const containerHeight = containerRef.current.clientHeight;
 
+    // Get content dimensions
+    const contentWidth = contentRef.current.clientWidth;
+    const contentHeight = contentRef.current.clientHeight;
+
     // Calculate scale factors
-    const scaleX = containerWidth / originalWidth;
-    const scaleY = containerHeight / originalHeight;
+    const scaleX = containerWidth / contentWidth;
+    const scaleY = containerHeight / contentHeight;
 
     // Use the smaller scale to ensure it fits
-    const newScale = Math.min(Math.max(Math.min(scaleX, scaleY) * (1 - margin), minScale), 1);
+    const newScale = Math.max(Math.min(scaleX, scaleY) * (1 - margin), minScale);
 
     setScale(newScale);
     setContainerSize({ width: containerWidth, height: containerHeight });
-  }, [margin, minScale, originalHeight, originalWidth]);
+    setContentSize({ width: contentWidth, height: contentHeight });
+  }, [margin, minScale]);
 
   // Setup resize observer
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || !contentRef.current) return;
 
     // Initial scale update
     updateScale();
 
     const resizeObserver = new ResizeObserver(updateScale);
     resizeObserver.observe(containerRef.current);
+    resizeObserver.observe(contentRef.current);
 
     return () => {
       resizeObserver.disconnect();
     };
-  }, [originalWidth, originalHeight, margin, updateScale]);
+  }, [margin, updateScale]);
 
   return (
-    <div
-      ref={containerRef}
-      className={`scaling ${className}`}
-      style={{
-        maxHeight: `${originalHeight}px`,
-        minHeight: `${originalHeight * minScale}px`
-      }}
-    >
+    <div ref={containerRef} className={`scaling ${className}`}>
       <div
-        ref={elementRef}
+        ref={contentRef}
         className='scaling__content'
         style={{
           transform: `scale(${scale})`
@@ -127,9 +121,12 @@ const ScalingElement = ({
         <div className='scaling__debug'>
           Scale: {scale.toFixed(2)}
           <br />
-          Container: {containerSize.width}×{containerSize.height}px
+          Container: {containerSize.width.toFixed()}×{containerSize.height.toFixed()}px
           <br />
-          Original: {originalWidth}×{originalHeight}px
+          Content: {contentSize.width.toFixed()}×{contentSize.height.toFixed()}px
+          <br />
+          Actual: {(contentSize.width * scale).toFixed()}×{(contentSize.height * scale).toFixed()}
+          px
         </div>
       )}
     </div>

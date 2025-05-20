@@ -44,12 +44,7 @@ const Sudoku = () => {
           </p>
 
           {/* Game Board */}
-          <ScalingElement
-            className='sudoku__grid-wrapper'
-            originalWidth={520}
-            originalHeight={520}
-            defaultScale={0}
-          >
+          <ScalingElement defaultScale={0} margin={0} showDebugInfo>
             <SudokuGrid ref={boardRef} showSolution={false} />
           </ScalingElement>
 
@@ -99,13 +94,7 @@ const Sudoku = () => {
 
           {/* Solution View */}
           {game.showSolution ? (
-            <ScalingElement
-              className='sudoku__grid-wrapper'
-              originalWidth={520}
-              originalHeight={520}
-              margin={0.1}
-              defaultScale={1}
-            >
+            <ScalingElement margin={0.1} defaultScale={1}>
               <SudokuGrid showSolution={true} />
             </ScalingElement>
           ) : (
