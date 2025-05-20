@@ -5,10 +5,10 @@
 
 import Draggable from './Draggable';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
-import ScalingElement from './ScalingElement';
 import SudokuGrid from './SudokuGrid';
 import { useSudoku } from '../context/SudokuContext';
 import './Sudoku.css';
+import { Dynascale } from 'dynascale';
 
 /**
  * Main Sudoku UI component
@@ -44,9 +44,9 @@ const Sudoku = () => {
           </p>
 
           {/* Game Board */}
-          <ScalingElement defaultScale={0} margin={0}>
+          <Dynascale defaultScale={0} margin={0}>
             <SudokuGrid ref={boardRef} showSolution={false} />
-          </ScalingElement>
+          </Dynascale>
 
           <p className='sudoku__stat'>
             <span>{game.lives}</span>
@@ -94,9 +94,9 @@ const Sudoku = () => {
 
           {/* Solution View */}
           {game.showSolution ? (
-            <ScalingElement margin={0.1} defaultScale={1}>
+            <Dynascale margin={0.1} defaultScale={1}>
               <SudokuGrid showSolution={true} />
-            </ScalingElement>
+            </Dynascale>
           ) : (
             <button
               className='button'
