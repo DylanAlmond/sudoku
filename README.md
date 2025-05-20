@@ -29,7 +29,6 @@ A simple Sudoku game.
 Make sure the following are installed before running the app:
 
 - **Node.js** (v16 or higher)
-- **Yarn** (as the package manager)
 
 ## Installation
 
