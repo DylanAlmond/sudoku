@@ -62,11 +62,11 @@ const SudokuCell = ({
     <Draggable
       ref={setDroppableRef}
       className={classNames}
-      id={`cell-${col}-${row}`}
+      id={`cell-${row}-${col}`}
       data={{ cell: { row, col, value } }}
       isDisabled={isImmutable || value == null}
       onClick={() => !isDisabled && onClick(row, col)}
-      title={`${col}-${row}`}
+      title={`${row}-${col}`}
       tabIndex={isImmutable ? -1 : 0}
     >
       {value}
