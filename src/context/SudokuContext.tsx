@@ -325,6 +325,23 @@ export function SudokuProvider({ children }: SudokuProviderProps) {
         );
       }
 
+      // Remove the current target cell
+      const currentTargetValue = state.board[targetRow][targetCol];
+      newBoard[targetRow][targetCol] = null;
+
+      // Remove current target conflcits
+      if (currentTargetValue !== null) {
+        console.log(currentTargetValue);
+
+        newConflicts = removeConflictsForCell(
+          state.board,
+          newConflicts,
+          targetRow,
+          targetCol,
+          currentTargetValue
+        );
+      }
+
       // Add our new value to the board
       newBoard[targetRow][targetCol] = value;
 
